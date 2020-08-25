@@ -8,14 +8,14 @@ RUN apk update
 RUN apk add npm
 
 WORKDIR /streamin-be
-COPY streamin-be/go.mod .
-COPY streamin-be/go.sum .
+COPY backend .
+COPY backend .
 
 RUN go mod download
 
 WORKDIR /streamin-fe
-COPY streamin-fe/package.json .
-COPY streamin-fe/package-lock.json .
+COPY frontend .
+COPY frontend .
 
 RUN npm install
 
@@ -33,7 +33,7 @@ FROM alpine
 RUN mkdir /app
 WORKDIR /app
 
-COPY --from=builder /streamin-be/streamin .
-COPY --from=builder /streamin-fe/build .
+COPY --from=builder /backend .
+COPY --from=builder /frontend .
 
 ENTRYPOINT ["/app/streamin"]

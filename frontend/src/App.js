@@ -81,7 +81,7 @@ const App = () => {
         console.log("Creating new connection")
         const conn = new WebSocket("ws://" + document.location.host + "/ws");
         conn.onclose = function () {
-            alert("connection closed")
+            alert("connection closed");
         };
         setConn(conn);
     }, [])
