@@ -1,39 +1,49 @@
 FROM golang:alpine AS builder
 
 WORKDIR /
-RUN mkdir /streamin-be
-RUN mkdir /streamin-fe
+RUN mkdir /backend
+RUN mkdir /frontend
 
 RUN apk update
 RUN apk add npm
 
-WORKDIR /streamin-be
-COPY backend .
-COPY backend .
-
-RUN go mod download
-
-WORKDIR /streamin-fe
-COPY frontend .
-COPY frontend .
+#####
+# Acquire and build frontend dependencies
+#####
+WORKDIR /frontend
+COPY frontend/package-lock.json .
+COPY frontend/package.json .
 
 RUN npm install
 
-WORKDIR /
-COPY . .
+#####
+# Acquire and build backend dependencies
+#####
+WORKDIR /backend
+COPY backend/go.mod .
+COPY backend/go.sum .
 
-WORKDIR /streamin-be
+RUN go mod download
+
+#############################
+
+WORKDIR /frontend
+COPY frontend .
+RUN npm run build
+
+WORKDIR /backend
+COPY backend .
 RUN go build -o streamin .
 
-WORKDIR /streamin-fe
-RUN npm run build
+#############################
 
 FROM alpine
 
 RUN mkdir /app
+RUN mkdir /app/web
 WORKDIR /app
 
-COPY --from=builder /backend .
-COPY --from=builder /frontend .
+COPY --from=builder /backend/streamin .
+COPY --from=builder /frontend/build web
 
 ENTRYPOINT ["/app/streamin"]
