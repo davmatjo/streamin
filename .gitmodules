@@ -1,0 +1,9 @@
+[submodule "streamin-conv"]
+	path = streamin-conv
+	url = https://github.com/davmatjo/streamin-conv
+[submodule "streamin-api"]
+	path = streamin-api
+	url = https://github.com/davmatjo/streamin-api
+[submodule "streamin-ui"]
+	path = streamin-ui
+	url = https://github.com/davmatjo/streamin-ui
