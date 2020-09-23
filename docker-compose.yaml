@@ -1,0 +1,36 @@
+version: '3'
+services:
+  nginx:
+    build: nginx
+    ports:
+      - 8080:8080
+      - 443:443
+    networks:
+      - streamin
+    restart: always
+
+  streamin-api:
+    build: ./streamin-api
+    networks:
+      - streamin
+    volumes:
+      - ./processed:/app/media
+
+  streamin-ui:
+    build: ./streamin-ui
+    networks:
+      - streamin
+
+  streamin-conv:
+    build: ./streamin-conv
+    #    environment:
+    #      RUST_LOG: debug
+    volumes:
+      - ./streamin-conv/config.yaml:/app/config.yaml
+      - ./unprocessed:/app/in
+      - ./processed:/app/out
+    networks:
+      - streamin
+
+networks:
+  streamin:

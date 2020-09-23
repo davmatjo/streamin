@@ -29,3 +29,6 @@ static/
 .idea/
 
 *.pem
+
+processed/
+unprocessed/
